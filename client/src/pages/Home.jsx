@@ -1,58 +1,97 @@
 import { useEffect, useState } from "react";
+
 import Map from "../components/Map";
 import SOSPanel from "../components/SOSPanel";
-import { useSocket } from "../context/SocketContext";
-import axios from "axios";
-import SOSButton from "../components/SOSButton";
 import FakeCall from "../components/FakeCall";
 import LiveServices from "../components/LiveServices";
+import SOSButton from "../components/SOSButton";
+
+import { useSocket } from "../context/SocketContext";
+
+import axios from "axios";
 
 export default function Home() {
+
   const socket = useSocket();
 
-  const [sosList, setSosList] = useState([]);
+  const [sosList, setSosList] =
+    useState([]);
 
   // 🚨 SOCKET EVENTS
   useEffect(() => {
+
     if (!socket) return;
 
     // NEW SOS
-    socket.on("newSOS", (data) => {
-      console.log("NEW SOS:", data);
+    socket.on(
+      "newSOS",
+      (data) => {
 
-      setSosList((prev) => [...prev, data]);
-    });
+        console.log(
+          "NEW SOS:",
+          data
+        );
 
-    // SOS ACCEPTED
-    socket.on("sosAccepted", (updated) => {
-      console.log("SOS ACCEPTED:", updated);
+        setSosList(
+          (prev) => [
+            ...prev,
+            data,
+          ]
+        );
+      }
+    );
 
-      setSosList((prev) =>
-        prev.map((s) =>
-          s._id === updated._id ? updated : s
-        )
-      );
-    });
+    // ACCEPTED SOS
+    socket.on(
+      "sosAccepted",
+      (updated) => {
+
+        console.log(
+          "SOS ACCEPTED:",
+          updated
+        );
+
+        setSosList((prev) =>
+          prev.map((s) =>
+            s._id === updated._id
+              ? updated
+              : s
+          )
+        );
+      }
+    );
 
     return () => {
+
       socket.off("newSOS");
-      socket.off("sosAccepted");
+
+      socket.off(
+        "sosAccepted"
+      );
     };
+
   }, [socket]);
 
   // 🚀 ACCEPT SOS
-  const handleAccept = async (sos) => {
-    try {
-      await axios.post(
-        `https://nightshift-server.onrender.com/api/sos/accept/${sos._id}`,
-        {
-          acceptedBy: "Responder",
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const handleAccept =
+    async (sos) => {
+
+      try {
+
+        await axios.post(
+          `https://nightshift-server.onrender.com/api/sos/accept/${sos._id}`,
+          {
+            acceptedBy:
+              "Responder",
+          }
+        );
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
+    };
 
   return (
     <div
@@ -61,42 +100,74 @@ export default function Home() {
         height: "100vh",
         position: "relative",
         overflow: "hidden",
+        background: "black",
       }}
     >
-      {/* 🗺️ MAP */}
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          zIndex: 1,
-        }}
-      > <LiveServices />
-        <Map />
-        
-      </div>
+      {/* 🌍 MAP */}
+      <Map />
+
+      {/* 🌙 LIVE SERVICES */}
+      <LiveServices />
 
       {/* 🚨 SOS BUTTON */}
       <div
         style={{
           position: "fixed",
-          bottom: "40px",
+          bottom: "55px",
           left: "50%",
-          transform: "translateX(-50%)",
+          transform:
+            "translateX(-50%)",
           zIndex: 999999,
-          pointerEvents: "auto",
         }}
       >
         <SOSButton />
       </div>
 
-      {/* 📋 SOS PANEL */}
+      {/* 📞 FAKE CALL */}
+      <FakeCall />
+
+      {/* 👤 TRUSTED CONTACT */}
+      <div
+        style={{
+          position: "fixed",
+          left: "20px",
+          bottom: "120px",
+          zIndex: 999999,
+        }}
+      >
+        <button
+          onClick={() =>
+            window.location.href =
+              "/trusted-contact"
+          }
+          style={{
+            background:
+              "#16a34a",
+            color: "white",
+            border: "none",
+            padding:
+              "14px 18px",
+            borderRadius:
+              "14px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            boxShadow:
+              "0 0 15px rgba(0,0,0,0.4)",
+          }}
+        >
+          👤 Trusted Contact
+        </button>
+      </div>
+
+      {/* 🚨 SOS ALERTS */}
       <div
         style={{
           position: "fixed",
           right: "20px",
           top: "80px",
           display: "flex",
-          flexDirection: "column",
+          flexDirection:
+            "column",
           gap: "12px",
           zIndex: 999999,
         }}
@@ -105,9 +176,11 @@ export default function Home() {
           <div
             key={sos._id}
             style={{
-              background: "white",
+              background:
+                "white",
               padding: "16px",
-              borderRadius: "16px",
+              borderRadius:
+                "16px",
               minWidth: "240px",
               boxShadow:
                 "0 0 20px rgba(0,0,0,0.3)",
@@ -115,7 +188,8 @@ export default function Home() {
           >
             <h3
               style={{
-                marginBottom: "8px",
+                marginBottom:
+                  "8px",
               }}
             >
               🚨 SOS Alert
@@ -129,21 +203,30 @@ export default function Home() {
               </strong>
             </p>
 
-            {sos.status !== "accepted" && (
+            {sos.status !==
+              "accepted" && (
               <button
                 onClick={() =>
-                  handleAccept(sos)
+                  handleAccept(
+                    sos
+                  )
                 }
                 style={{
-                  marginTop: "10px",
+                  marginTop:
+                    "10px",
                   width: "100%",
-                  padding: "10px",
-                  background: "#16a34a",
+                  padding:
+                    "10px",
+                  background:
+                    "#16a34a",
                   color: "white",
                   border: "none",
-                  borderRadius: "10px",
-                  cursor: "pointer",
-                  fontWeight: "bold",
+                  borderRadius:
+                    "10px",
+                  cursor:
+                    "pointer",
+                  fontWeight:
+                    "bold",
                 }}
               >
                 Accept Emergency
@@ -155,7 +238,6 @@ export default function Home() {
 
       {/* 🚨 LIVE SOS PANEL */}
       <SOSPanel />
-      <FakeCall />
     </div>
   );
 }
