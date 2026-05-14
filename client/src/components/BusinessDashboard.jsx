@@ -5,7 +5,7 @@ export default function BusinessDashboard() {
   const [type, setType] = useState("mechanic");
 
   const goLive = async () => {
-    await axios.post("http://localhost:5000/api/business/heartbeat", {
+    await axios.post("https://nightshift-server.onrender.com/api/business/heartbeat", {
       type,
       lat: 18.5204,
       lng: 73.8567,
@@ -21,7 +21,7 @@ export default function BusinessDashboard() {
       lat += 0.001;
       lng += 0.001;
 
-      await axios.post("http://localhost:5000/api/tracking/update-location", {
+      await axios.post("https://nightshift-server.onrender.com/api/tracking/update-location", {
         lat,
         lng,
       });

@@ -59,7 +59,7 @@ export default function Map() {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/business/live"
+        "https://nightshift-server.onrender.com/api/business/live"
       );
 
       setBusinesses(res.data);

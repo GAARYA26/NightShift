@@ -21,7 +21,7 @@ export default function LiveServices() {
       setLoading(true);
 
       const res = await axios.get(
-        "http://localhost:5000/api/business/live"
+        "https://nightshift-server.onrender.com/api/business/live"
       );
 
       setServices(res.data);

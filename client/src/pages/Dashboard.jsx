@@ -4,7 +4,7 @@ useEffect(() => {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
 
-      await axios.post("http://localhost:5000/api/business/heartbeat", {
+      await axios.post("https://nightshift-server.onrender.com/api/business/heartbeat", {
         owner: user.name,
         name: serviceName,
         type: serviceType,

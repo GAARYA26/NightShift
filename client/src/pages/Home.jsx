@@ -44,7 +44,7 @@ export default function Home() {
   const handleAccept = async (sos) => {
     try {
       await axios.post(
-        `http://localhost:5000/api/sos/accept/${sos._id}`,
+        `https://nightshift-server.onrender.com/api/sos/accept/${sos._id}`,
         {
           acceptedBy: "Responder",
         }
