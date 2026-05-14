@@ -30,9 +30,13 @@ io.on("connection", (socket) => {
 app.set("io", io);
 
 // 🔥 MIDDLEWARE
-app.use(cors());
-app.use(express.json());
-
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 // 🔥 DATABASE CONNECTION
 mongoose
   .connect(process.env.MONGO_URI)
